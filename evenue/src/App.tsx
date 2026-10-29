@@ -6,14 +6,20 @@ import CitizenSearch from './components/CitizenSearch'
 import Login from './components/Login.jsx'
 import CitizenDashboard from './components/CitizenDashboard'
 import Favourites from './components/Favourites'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import Home from './components/Home'
 
 function App() {
+  const { pathname } = useLocation()
+
   return (
     <>
-    <Navbar></Navbar>
+    {pathname !== '/home' && <Navbar />}
     <Routes>
-        <Route path="/" element={<CitizenDashboard />}></Route>
+        {/* <Route path="/" element={<Navigate to="/citizen-dashboard" replace />} />  */}
+        <Route path="/" element={<Navigate to="/home" replace />} /> 
+         {/* it initially opens / this route but then it wants it to navigate to /citizen-dashboard */}
+            <Route path="/home" element={<Home></Home>}> </Route>
             <Route path ="/vendor-form" element={<VendorRegister></VendorRegister>}></Route>
             <Route path ="/citizen-form" element={<Citizen></Citizen>}></Route>
             <Route path ="/citizen-search" element={<CitizenSearch></CitizenSearch>}></Route>
@@ -23,7 +29,7 @@ function App() {
               <Route path="search" element={<CitizenSearch />} />
               <Route path="favourites" element={<Favourites />} />
             </Route>
-    </Routes>
+     </Routes>
     {/* <Citizen></Citizen> */}
     
   

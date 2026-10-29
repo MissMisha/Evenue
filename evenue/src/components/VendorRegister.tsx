@@ -54,13 +54,15 @@ function VendorRegister() {
   const [certificatePrev, setCertificate] = useState<string>('')
   const [message, setMessage] = useState('')
 
-  function doShowPicPrev(event:React.ChangeEvent<HTMLFormElement>){
-     setValues((current) => ({
-                      ...current,
-                     ["shopPicture"]: event.target.files?.[0] || null,
-                    }))
-      const obj = URL.createObjectURL(event.target.files?.[0])
-      setPic(obj)
+  function doShowPicPrev(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    setValues((current) => ({
+      ...current,
+      shopPicture: file,
+    }))
+    setPic(URL.createObjectURL(file))
   }
 
   function doShowCertificatePrev(event: React.ChangeEvent<HTMLInputElement>) {
@@ -139,10 +141,29 @@ function VendorRegister() {
 
   return (
     <main className="registration-page">
+      <div className="registration-glow registration-glow-one" />
+      <div className="registration-glow registration-glow-two" />
+      <section className="registration-hero" aria-labelledby="registration-title">
+        <div>
+         
+          <h1 id="registration-title">Join the evenue community.</h1>
+          <p className="registration-hero-copy">
+            Share your story, showcase your work, and help people discover the right business for their next
+            memorable gathering.
+          </p>
+        </div>
+        <div className="registration-note">
+          <span className="material-symbols-outlined">verified</span>
+          <div>
+            <strong>Curated visibility</strong>
+            <span>One profile, more meaningful connections.</span>
+          </div>
+        </div>
+      </section>
       <section className="registration-card">
         <div className="form-heading">
           <p className="eyebrow">Business directory</p>
-          <h1>Register your business</h1>
+          <h2>Register your business</h2>
           <p className="form-intro">
             Add your business details to help customers discover and connect with you.
           </p>
@@ -322,7 +343,7 @@ function VendorRegister() {
                   accept="image/*"
                   onChange={doShowPicPrev}
                 />
-                <img src={picPrev} className="shop-picture-preview" alt="Shop picture preview" />
+                {picPrev && <img src={picPrev} className="shop-picture-preview" alt="Shop picture preview" />}
               </label>
               <label>
                 Business certificate
@@ -332,7 +353,9 @@ function VendorRegister() {
                   accept=".pdf,.jpg,.jpeg,.png"
                   onChange={doShowCertificatePrev}
                 />
-                <img src={certificatePrev} className="shop-picture-preview" alt="Business certificate preview" />
+                {certificatePrev && (
+                  <img src={certificatePrev} className="shop-picture-preview" alt="Business certificate preview" />
+                )}
               </label>
             </div>
           </fieldset>
