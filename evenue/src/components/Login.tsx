@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -9,7 +10,14 @@ function Login() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    
+    try{
+      const resp = axios.get("http://localhost:2001/user/verify-user",{params:{email:email,password:password}})
+      console.log(resp);
+    }
+    catch(err){
+      console.log(err)
+    }
+
     setMessage('Login details submitted.')
   }
 
