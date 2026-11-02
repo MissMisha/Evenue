@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 function Login() {
@@ -7,12 +7,19 @@ function Login() {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [message, setMessage] = useState('')
+  const navigate = useNavigate();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try{
-      const resp = axios.get("http://localhost:2001/user/verify-user",{params:{email:email,password:password}})
-      console.log(resp);
+      const resp = await axios.get("http://localhost:2001/user/verify-user",{params:{email:email,password:password}})
+      console.log(resp.data);
+    if(resp.data.user.role == 'citizen'){
+      navigate("/citizen-dashboard")
+    }
+    else{
+      navigate("/vendor-form")
+    }
     }
     catch(err){
       console.log(err)

@@ -7,6 +7,7 @@ async function saveUserData(req,resp){
     const newUser = await userColRef.create({
         name,
         email,
+        role,
         password:hashedpwd
     });
     let doc = newUser;
