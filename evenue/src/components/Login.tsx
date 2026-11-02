@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 function Login() {
@@ -12,14 +12,20 @@ function Login() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try{
-      const resp = await axios.get("http://localhost:2001/user/verify-user",{params:{email:email,password:password}})
+      const resp = await axios.get("http://localhost:2001/user/verify-user",
+        {params:{
+          email:email,password:password
+        }}
+      )
       console.log(resp.data);
+      localStorage.setItem("token",resp.data.token)
     if(resp.data.user.role == 'citizen'){
       navigate("/citizen-dashboard")
     }
     else{
       navigate("/vendor-form")
     }
+
     }
     catch(err){
       console.log(err)

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import VendorCard from './VendorCard'
+import { useNavigate } from 'react-router-dom';
 
 
 function CitizenSearch() {
@@ -29,6 +30,21 @@ function CitizenSearch() {
   const [services, setServices] = useState<string[]>([])
   const [selectedService, setSelectedService] = useState('')
   const [vendors,setVendors] = useState<vendor[]>([])
+  const [toastMessage, setToastMessage] = useState('')
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!toastMessage) {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setToastMessage('')
+      navigate('/login')
+    }, 2500)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [navigate, toastMessage])
 
   useEffect(()=>{
     axios.post("http://localhost:2001/citizen/saveEvents").then((res)=>{   // if not present then save otherwise return them
@@ -41,8 +57,19 @@ function CitizenSearch() {
  },[])
 
  async function showServices(name:string){
-   
-   await axios.get("http://localhost:2001/citizen/fetchServices",{params:{event:name}}).then((res)=>{
+   const token = localStorage.getItem("token")
+   await axios.get("http://localhost:2001/citizen/fetchServices",{
+    params:{event:name},
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  }).then((res)=>{
+       // console.log(res.data)
+       if(res.data.msg == "Session expired"){
+        setToastMessage('Your session has expired. Please log in again.')
+        // navigate("/login")
+       }
+       
         setServices(res.data.doc.services)
        setSelectedService('')
     }).catch((err)=>{
@@ -52,7 +79,17 @@ function CitizenSearch() {
 
  async function showVendors(service:string){
     // console.log("hii")
-    await axios.get("http://localhost:2001/citizen/fetchVendors",{params:{service:service}}).then((res)=>{
+     const token = localStorage.getItem("token")
+    await axios.get("http://localhost:2001/citizen/fetchVendors",{
+      params:{service:service},
+       headers: {
+      authorization: `Bearer ${token}`,
+    },
+    }).then((res)=>{
+       if(res.data.msg == "Session expired"){
+        setToastMessage('Your session has expired. Please log in again.')
+        // navigate("/login")
+       }
         console.log(res.data)
         setVendors(res.data.doc)
         // console.log(vendors)
@@ -64,6 +101,13 @@ function CitizenSearch() {
   
   return (
     <main className="citizen-search-page">
+      {toastMessage && (
+        <div className="session-toast" role="alert">
+          <span className="session-toast-icon" aria-hidden="true">!</span>
+          <span>{toastMessage}</span>
+          
+        </div>
+      )}
       <section className="citizen-search-layout">
         <aside className="citizen-search-sidebar">
           <div className="citizen-search-heading">

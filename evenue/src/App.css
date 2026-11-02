@@ -782,6 +782,56 @@ button:hover { transform: translateY(-1px); }
   background: #f5f7f8;
 }
 
+.session-toast {
+  position: fixed;
+  z-index: 100;
+  top: 88px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: min(420px, calc(100vw - 48px));
+  padding: 14px 16px;
+  border: 1px solid #e8b4a6;
+  border-radius: 14px;
+  color: #4e3a35;
+  background: #fffaf6;
+  box-shadow: 0 12px 30px rgba(34, 75, 67, .16);
+  animation: session-toast-slide-in .25s ease-out both;
+}
+
+.session-toast-icon {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: #d98270;
+  font-weight: 700;
+}
+
+.session-toast button {
+  min-width: 0;
+  margin-left: auto;
+  padding: 7px 12px;
+  border-radius: 999px;
+  color: #fff;
+  background: #006857;
+  font-size: .75rem;
+}
+
+.session-toast button:hover {
+  background: #005548;
+  transform: none;
+}
+
+@keyframes session-toast-slide-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .citizen-search-layout {
   display: grid;
   grid-template-columns: 25% 75%;

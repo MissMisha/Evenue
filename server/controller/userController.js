@@ -1,5 +1,6 @@
 let bcrypt = require('bcrypt')
 let userColRef = require("../models/userSchema");
+let jwt = require('jsonwebtoken')
 
 async function saveUserData(req,resp){
     const {name,email,password,role} = req.body;
@@ -33,7 +34,14 @@ async function checkUser(req,resp){
     return resp.json({status:false,msg:"Invalid credentials"})
    }
 
-   return resp.json({status:true,msg:"Login Successfull",user});
+   // generate JWT token
+   const token = jwt.sign(
+    {id:user.id},
+    process.env.jwt_secret,
+    {expiresIn:'1m'}
+   );
+
+   return resp.json({status:true,msg:"Login Successfull",token:token,user});
    }
    catch(err){
     return resp.json({status:false,msg:"Error occured"})
