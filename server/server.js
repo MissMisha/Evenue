@@ -6,6 +6,7 @@ var path = require("path");
 var {doMongooseConnection} = require("./config/mongooseConnect")
 var vendorRouter = require("./routers/vendorRouter")
 var citizenRouter = require("./routers/citizenRouter")
+var userRouter = require("./routers/userRouter")
 
 
 let app = express();
@@ -23,3 +24,4 @@ app.listen(2001,()=>{
 doMongooseConnection();
 app.use("/vendor",vendorRouter);
 app.use("/citizen",citizenRouter);
+app.use("/user",userRouter);

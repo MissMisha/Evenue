@@ -255,6 +255,13 @@ button:hover { transform: translateY(-1px); }
   background: radial-gradient(circle at top right, #d8f0e9 0, #f4f7f6 46%);
 }
 
+.signup-page {
+  background:
+    radial-gradient(circle at 8% 12%, rgba(232, 180, 166, .28), transparent 30%),
+    radial-gradient(circle at 92% 78%, rgba(127, 189, 168, .24), transparent 32%),
+    #fbf6f0;
+}
+
 .login-card {
   width: min(100%, 440px);
   overflow: hidden;
@@ -347,6 +354,49 @@ button:hover { transform: translateY(-1px); }
 }
 .login-submit:hover { background: #12564f; }
 .login-message { margin: -4px 0 0; color: #176b61; text-align: center; font-size: .82rem; font-weight: 600; }
+
+.signup-card {
+  width: min(100%, 1100px);
+  max-width: none;
+  border: 1px solid #eadbce;
+  border-radius: 28px;
+  box-shadow: 0 24px 60px rgba(34, 75, 67, .12);
+}
+.signup-card .login-accent { height: 9px; background: linear-gradient(90deg, #006857, #7fbda8, #e59a88); }
+.signup-card .login-content { padding: 48px 64px 52px; }
+.signup-card .login-heading h1 { color: #1e2e2b; font-family: 'Playfair Display', Georgia, serif; font-size: clamp(2rem, 4vw, 3.2rem); }
+.signup-card .login-heading span { color: #52635c; }
+.signup-card .login-form { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 24px; }
+.signup-card .signup-role-label,
+.signup-card .login-form > label:first-child { grid-column: 1 / -1; }
+.signup-card select {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 8px;
+  padding: 10px 40px 10px 14px;
+  border: 1px solid #eadbce;
+  border-radius: 12px;
+  color: #223330;
+  background: #fffaf6;
+  font: inherit;
+  cursor: pointer;
+}
+.signup-card select:focus { border-color: #006857; box-shadow: 0 0 0 3px rgba(0, 104, 87, .12); outline: none; }
+.signup-card .login-submit,
+.signup-card .login-message { grid-column: 1 / -1; }
+.signup-card .login-submit { border-radius: 999px; background: #006857; }
+.signup-card .login-submit:hover { background: #005548; }
+.signup-login-link { margin: 22px 0 0; color: #687983; text-align: center; font-size: .82rem; }
+.signup-login-link a {
+  padding: 0;
+  border: 0;
+  color: #176b61;
+  background: transparent;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
 
 .vendor-card {
   display: grid;
@@ -1334,6 +1384,11 @@ button:hover { transform: translateY(-1px); }
   .citizen-actions button { width: 100%; }
   .login-page { min-height: calc(100vh - 64px); padding: 24px 12px; }
   .login-content { padding: 30px 22px 32px; }
+  .signup-card .login-content { padding: 32px 22px 36px; }
+  .signup-card .login-form { grid-template-columns: 1fr; }
+  .signup-card .login-form > label:first-child,
+  .signup-card .login-submit,
+  .signup-card .login-message { grid-column: auto; }
   .login-options { align-items: flex-start; flex-direction: column; }
   .citizen-dashboard,
   .citizen-dashboard.sidebar-collapsed {

@@ -3,7 +3,8 @@ import Navbar from './components/Navbar'
 import VendorRegister from './components/VendorRegister'
 import Citizen from './components/Citizen'
 import CitizenSearch from './components/CitizenSearch'
-import Login from './components/Login.jsx'
+import Login from './components/Login'
+import Signup from './components/Signup'
 import CitizenDashboard from './components/CitizenDashboard'
 import Favourites from './components/Favourites'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -24,6 +25,7 @@ function App() {
             <Route path ="/citizen-form" element={<Citizen></Citizen>}></Route>
             <Route path ="/citizen-search" element={<CitizenSearch></CitizenSearch>}></Route>
             <Route path ="/login" element={<Login></Login>}></Route>
+            <Route path ="/signup" element={<Signup></Signup>}></Route>
             <Route path="/citizen-dashboard" element={<CitizenDashboard />}>
               <Route index element={<CitizenSearch />} />
               <Route path="search" element={<CitizenSearch />} />

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -6,7 +6,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false)
   const [message, setMessage] = useState('')
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setMessage('Login details submitted.')
   }

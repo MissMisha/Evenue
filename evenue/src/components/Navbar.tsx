@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 function Navbar() {
   // const [menuOpen, setMenuOpen] = useState(false
   const navigate = useNavigate();
-
+  
   return (
    <header className="sticky top-0 left-0 right-0 w-full z-50 bg-white/90 backdrop-blur-xl border-b border-outline-variant shadow-[0_1px_8px_rgba(36,59,57,0.04)] transition-all">
         <div className="h-20 max-w-[1360px] mx-auto px-6 lg:px-12 flex items-center justify-between">
@@ -56,16 +56,19 @@ function Navbar() {
 
           {/* Actions */}
           <div className="flex items-center gap-3">
-            <button
+            {/* <button
                 onClick={()=>navigate("/vendor-form")}
               className="inline-flex items-center px-5 py-2 rounded-full bg-primary text-on-primary text-sm font-semibold hover:bg-primary-container shadow-sm hover:shadow transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer"
             >
               Register Your business    
-            </button>
+            </button> */}
             <button
+              onClick={()=>{
+                 navigate('/signup');
+              }}
               className="inline-flex items-center px-5 py-2 rounded-full bg-primary text-on-primary text-sm font-semibold hover:bg-primary-container shadow-sm hover:shadow transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer"
             >
-              Start Planning     
+              Signup Here   
             </button>
             <button
               aria-label="User Account"

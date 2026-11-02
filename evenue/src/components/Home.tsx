@@ -175,9 +175,10 @@ export const Home: React.FC = () => {
               Register Your business    
             </button>
             <button
+            onClick={()=>navigate("/signup")}
               className="inline-flex items-center px-5 py-2 rounded-full bg-primary text-on-primary text-sm font-semibold hover:bg-primary-container shadow-sm hover:shadow transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer"
             >
-              Start Planning     
+              Signup Here    
             </button>
             <button
               aria-label="User Account"
@@ -238,10 +239,13 @@ export const Home: React.FC = () => {
               Register your business
             </a>
             <button
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() => {
+                setMobileMenuOpen(false)
+                navigate('/signup')
+              }}
               className="w-full text-center py-2.5 rounded-full bg-primary text-white font-semibold shadow-sm"
             >
-              Start Planning
+              Signup Here
             </button>
           </div>
         )}
@@ -295,9 +299,10 @@ export const Home: React.FC = () => {
                 {/* Hero CTAs */}
                 <div className="pt-2 flex flex-wrap items-center gap-4">
                   <button
+                    onClick={() => navigate('/signup')}
                     className="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-primary hover:bg-primary-container text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 cursor-pointer"
                   >
-                    Start Planning
+                    Signup Here
                     <span className="material-symbols-outlined ml-2 text-[18px]">arrow_forward</span>
                   </button>
                   <a
@@ -895,6 +900,7 @@ export const Home: React.FC = () => {
 
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
+                onClick={() => navigate('/signup')}
                 className="w-full sm:w-auto inline-flex items-center justify-center px-9 py-4 rounded-full bg-primary text-white text-sm font-semibold shadow-lg hover:bg-primary-container transition-all cursor-pointer"
               >
                 <span>Start Planning Now</span>
