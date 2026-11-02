@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import axios from "axios"
 
 type SignupRole = 'citizen' | 'vendor'
 
@@ -19,7 +20,14 @@ function Signup() {
       setMessage('Passwords do not match.')
       return
     }
-    
+    try{
+        const resp = axios.post("http://localhost:2001/user/saveUserData",{email:email,name:name,password:password,role:role})
+        console.log(resp);
+    }
+    catch(err){
+        console.log(err);
+    }
+   
     setMessage(`Signup details submitted as a ${role}.`)
   }
 

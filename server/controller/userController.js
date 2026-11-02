@@ -11,4 +11,13 @@ async function saveUserData(req,resp){
 
 }
 
-module.exports = {saveUserData};
+async function checkUser(req,resp){
+    let email = req.query.email;
+    let doc = await userColRef.find({email:email}).then((doc)=>{
+        resp.json({status:true,msg:"User found successfully",doc})
+    }).catch((err)=>{
+        resp.json({status:false,msg:"Error logging in"});
+    })
+}
+
+module.exports = {saveUserData,checkUser};

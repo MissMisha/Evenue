@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -8,13 +9,33 @@ function Login() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    
     setMessage('Login details submitted.')
   }
 
   return (
-    <main className="login-page">
+    <main className="login-page login-themed">
+      <div className="login-decoration login-decoration-left" aria-hidden="true">
+        <span className="login-spark">✦</span>
+        <span className="login-decoration-line" />
+        <strong>Plan beautifully</strong>
+        <small>Bring every detail together.</small>
+      </div>
+      <div className="login-decoration login-decoration-right" aria-hidden="true">
+        <span className="login-orbit-dot" />
+        <span className="login-orbit-dot login-orbit-dot-small" />
+        <strong>12,000+</strong>
+        <small>vetted artisans</small>
+      </div>
       <section className="login-card">
         <div className="login-accent" />
+        <div className="login-visual">
+          <img src="/images/wedding-hero.jpg" alt="A beautifully planned celebration" />
+          <div className="login-visual-overlay">
+            <span>Curated celebrations</span>
+            <strong>Bring your next big moment to life.</strong>
+          </div>
+        </div>
         <div className="login-content">
           <div className="login-heading">
             <p>Welcome back</p>
@@ -70,6 +91,10 @@ function Login() {
             <button className="login-submit" type="submit">Sign in</button>
             {message && <p className="login-message" role="status">{message}</p>}
           </form>
+
+          <p className="login-signup-link">
+            New to Evenue? <Link to="/signup">Create an account</Link>
+          </p>
         </div>
       </section>
     </main>
