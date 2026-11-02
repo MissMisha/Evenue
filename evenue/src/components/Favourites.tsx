@@ -1,6 +1,7 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import VendorCard from "./VendorCard";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // interface favourite{
 //     email:string;
@@ -26,6 +27,21 @@ function Favourites() {
     const [favourites,setFavourites] = useState(false);
     const [fvrtVendors,setfavrtVendors] = useState<vendor[]>([]);
     const [email,setEmail] = useState("");
+    const [toastMessage, setToastMessage] = useState("");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      if (!toastMessage) {
+        return
+      }
+
+      const timeoutId = window.setTimeout(() => {
+        setToastMessage("")
+        navigate("/login")
+      }, 2500)
+
+      return () => window.clearTimeout(timeoutId)
+    }, [navigate, toastMessage])
 
     function getCards(ary:[string]){
          axios.post("http://localhost:2001/vendor/getfavrtCards",{
@@ -39,21 +55,41 @@ function Favourites() {
 
     // fetch the document of specific user from favourites collection 
     function fetchFavourites(){
+      const token = localStorage.getItem("token")
         axios.get("http://localhost:2001/vendor/getfavrts",{
-            params: {email}
-        })
+           params: {email},
+             headers: {
+           authorization: `Bearer ${token}`
+            }
+    })
         .then((res)=>{
             console.log(res)
-            getCards(res.data.doc[0].vendors)  // I need all emails I want to retrieve 
+            if (res.data.msg === "Session expired" || res.data.msg === "Token missing or invalid") {
+              setToastMessage("Your session has expired. Please log in again.")
+              return
+            }
+
+            if (res.data.doc?.[0]?.vendors) {
+              getCards(res.data.doc[0].vendors)  // I need all emails I want to retrieve
+            }
             setFavourites(true)
         }).catch((err)=>{
             console.log(err)
+            if (err.response?.status === 401) {
+              setToastMessage("Your session has expired. Please log in again.")
+            }
         })
     }
 
 
   return (
     <div className="dashboard-favourites">
+      {toastMessage && (
+        <div className="session-toast" role="alert">
+          <span className="session-toast-icon" aria-hidden="true">!</span>
+          <span>{toastMessage}</span>
+        </div>
+      )}
       <div className="dashboard-page-heading">
         <p>Citizen dashboard</p>
         <h1>My favourites</h1>

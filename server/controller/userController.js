@@ -38,7 +38,7 @@ async function checkUser(req,resp){
    const token = jwt.sign(
     {id:user.id},
     process.env.jwt_secret,
-    {expiresIn:'1m'}
+    {expiresIn:'2m'}
    );
 
    return resp.json({status:true,msg:"Login Successfull",token:token,user});

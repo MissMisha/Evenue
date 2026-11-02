@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 type Vendor = {
   email: string
   name: string
@@ -17,18 +18,47 @@ type Vendor = {
   businessCertificate: string
 }
 
+
 function VendorCard({ vendor }: { vendor: Vendor }) {
+ const navigate = useNavigate();
   const [showFavouritePopup, setShowFavouritePopup] = useState(false)
   const [msg,setMsg] = useState("");
+  const [toastMessage,setToastMessage]=useState("")
   const categories = Array.isArray(vendor.categories)
     ? vendor.categories
     : vendor.categories
       ? [vendor.categories]
       : []
 
+       useEffect(() => {
+    if (!toastMessage) {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setToastMessage('')
+      navigate('/login')
+    }, 2500)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [navigate, toastMessage])
+
   async function addToFavourites(){
+    // console.log("add");
       try {
-        const res = await axios.post("http://localhost:2001/vendor/savefavrts",{"email":"mia2601@gmail.com","vendorId":vendor.email})
+        const token = localStorage.getItem("token")
+        const res = await axios.post("http://localhost:2001/vendor/savefavrts",
+          {
+            email: "mishabansal26@gmail.com",
+            vendorId: vendor.email},
+           { headers: {
+           authorization: `Bearer ${token}`,
+    }}
+        )
+         if(res.data.msg == "Session expired"){
+        setToastMessage('Your session has expired. Please log in again.')
+        // navigate("/login")
+       }
         setShowFavouritePopup(true)
         setMsg(res.data.msg)
         console.log(res)
@@ -52,6 +82,12 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
 
   return (
     <article className="vendor-card">
+      {toastMessage && (
+        <div className="session-toast" role="alert">
+          <span className="session-toast-icon" aria-hidden="true">!</span>
+          <span>{toastMessage}</span>
+        </div>
+      )}
       <div className="vendor-card-image">
         {vendor.shopPicture ? (
           <img src={vendor.shopPicture} alt={`${vendor.businessName} shop`} />
@@ -153,8 +189,8 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
         <div className="favourite-popup" role="status" aria-live="polite">
           <div className="favourite-popup-icon">♡</div>
           <div className="favourite-popup-content">
-            <strong>{msg}</strong>
-            <p>{vendor.businessName || 'This service provider'} {msg}</p>
+            <strong>Favourite updated</strong>
+            <p>{msg}</p>
           </div>
           <button
             className="favourite-popup-close"

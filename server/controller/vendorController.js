@@ -82,7 +82,7 @@ async function saveFavourites(req,res){
       );
       console.log(result)
 
-      res.json({status:false,msg:"Favourite saved successfully",result})
+      res.json({status:true,msg:"Favourite saved successfully",result})
     }
    
 }

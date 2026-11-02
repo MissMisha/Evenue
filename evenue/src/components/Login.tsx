@@ -19,6 +19,7 @@ function Login() {
       )
       console.log(resp.data);
       localStorage.setItem("token",resp.data.token)
+      localStorage.setItem("user", JSON.stringify(resp.data.user))
     if(resp.data.user.role == 'citizen'){
       navigate("/citizen-dashboard")
     }
