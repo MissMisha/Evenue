@@ -31,6 +31,8 @@ function CitizenSearch() {
   const [selectedService, setSelectedService] = useState('')
   const [vendors,setVendors] = useState<vendor[]>([])
   const [toastMessage, setToastMessage] = useState('')
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,6 +47,10 @@ function CitizenSearch() {
 
     return () => window.clearTimeout(timeoutId)
   }, [navigate, toastMessage])
+
+  useEffect(() => {
+    showVendors(selectedService, currentPage);
+}, [selectedService, currentPage]);
 
   useEffect(()=>{
     axios.post("http://localhost:2001/citizen/saveEvents").then((res)=>{   // if not present then save otherwise return them
@@ -77,11 +83,11 @@ function CitizenSearch() {
     })
  }
 
- async function showVendors(service:string){
+ async function showVendors(service:string,page:number){
     // console.log("hii")
      const token = localStorage.getItem("token")
     await axios.get("http://localhost:2001/citizen/fetchVendors",{
-      params:{service:service},
+      params:{service:service,page:page},
        headers: {
       authorization: `Bearer ${token}`,
     },
@@ -92,6 +98,8 @@ function CitizenSearch() {
        }
         console.log(res.data)
         setVendors(res.data.doc)
+        setTotalPages(res.data.totalPages)
+
         // console.log(vendors)
     }).catch((err)=>{
         console.log(err)
@@ -182,6 +190,26 @@ function CitizenSearch() {
               <VendorCard key={vendor.email} vendor={vendor} />
             ))}
           </div>
+          {/* Paging html code  */}
+            <div>
+              <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(p => p - 1)}
+              >
+                  Previous
+              </button>
+
+              <span>
+                  {currentPage} / {totalPages}
+              </span>
+
+              <button
+                  disabled={currentPage >= totalPages}
+                  onClick={() => setCurrentPage(p => p + 1)}
+              >
+                  Next
+              </button>
+        </div>
         </section>
       </section>
     </main>

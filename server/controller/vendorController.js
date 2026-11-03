@@ -34,7 +34,7 @@ async function doRegister(req,res){
         
         let doc = new vendorColRef(req.body);
         doc.save().then((doc)=>{
-            // console.log(res);
+            console.log(res);
             res.json({status:true,"msg":"Data saved successfully","doc":doc})
         }).catch((err)=>{
             console.log(err)

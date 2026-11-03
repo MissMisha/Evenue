@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 function Navbar() {
@@ -9,7 +8,7 @@ function Navbar() {
    <header className="sticky top-0 left-0 right-0 w-full z-50 bg-white/90 backdrop-blur-xl border-b border-outline-variant shadow-[0_1px_8px_rgba(36,59,57,0.04)] transition-all">
         <div className="h-20 max-w-[1360px] mx-auto px-6 lg:px-12 flex items-center justify-between">
           {/* Logo */}
-          <a className="flex items-center gap-2 group cursor-pointer" href="#home">
+          <Link className="flex items-center gap-2 group cursor-pointer" to="/home">
             <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
               <span className="text-on-primary font-serif text-2xl leading-none select-none pb-0.5 font-bold">
                 e
@@ -18,7 +17,7 @@ function Navbar() {
             <span className="font-serif text-2xl tracking-tight text-on-surface group-hover:text-primary transition-colors font-medium">
               evenue
             </span>
-          </a>
+          </Link>
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-8">

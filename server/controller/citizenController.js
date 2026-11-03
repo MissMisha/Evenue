@@ -54,13 +54,33 @@ async function fetchServices(req,res){
 }
 
 async function fetchVendors(req,res){
-    const serviceName = req.query.service;
-    let doc = await vendorColRef.find({categories:serviceName}).then((doc)=>{
-        // console.log(doc)
-        res.json({status:true,msg:"Vendors fetched successfully",doc})
-    }).catch((err)=>{
-        res.json({status:false,msg:err})
+    try{
+    const {service,page=1} = req.query;
+    const limit = 4;
+    const skip = (Number(page)-1)*limit;
+
+    let doc = await vendorColRef.find({categories:service})
+    .skip(skip)
+    .limit(limit);
+
+    const totalVendors = await vendorColRef.countDocuments({categories:service})
+
+    let totalPages = Math.ceil(totalVendors/limit);
+    console.log(doc)
+    return res.json({
+        status:true,
+        doc:doc,
+        currentPage : Number(page),
+        totalPages:totalPages,
+        totalVendors:totalVendors
     })
+    }
+    catch(err){
+        console.log(err)
+
+        return res.json({status:false,msg:"Error fetching vendors"})
+    }
+   
 }
 
 async function extractCitizenDetails(req,res){
