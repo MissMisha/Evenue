@@ -33,6 +33,7 @@ function CitizenSearch() {
   const [toastMessage, setToastMessage] = useState('')
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showPage,setShowPage] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -161,6 +162,7 @@ function CitizenSearch() {
                       onChange={
                         (event) => {setSelectedService(event.target.value);
                         showVendors(event.target.value);
+                        setShowPage(true)
                         }}
                     />
                     <span>{service}</span>
@@ -191,7 +193,7 @@ function CitizenSearch() {
             ))}
           </div>
           {/* Paging html code  */}
-            <div>
+           {showPage && <div className="citizen-pagination">
               <button
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage(p => p - 1)}
@@ -209,7 +211,7 @@ function CitizenSearch() {
               >
                   Next
               </button>
-        </div>
+        </div>}
         </section>
       </section>
     </main>

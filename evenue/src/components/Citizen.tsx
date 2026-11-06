@@ -31,27 +31,28 @@ function Citizen() {
   const [frontPreview, setFrontPreview] = useState('')
   const [backPreview, setBackPreview] = useState('')
   const [message, setMessage] = useState('')
-  const [isExtracting, setIsExtracting] = useState(false)
+  const [extractingSide, setExtractingSide] = useState<'frontSide' | 'backSide' | null>(null)
 
   const updateField = (field: keyof CitizenValues, value: string) => {
     setValues((current) => ({ ...current, [field]: value }))
   }
 
   const processAadhaarImage = async (file: File, side: 'frontSide' | 'backSide') => {
-    console.log("called")
     const formData = new FormData()
     formData.append('aadhaarImage', file)
     formData.append('side', side === 'frontSide' ? 'front' : 'back')
 
     try {
-      setIsExtracting(true)
+      setExtractingSide(side)
       setMessage('Extracting Aadhaar information...')
       const response = await axios.post(
         'http://localhost:2001/citizen/extractAadhaar',
         formData,
       )
       const details = response.data.details
-      console.log(details);
+      if (!details) {
+        throw new Error('No Aadhaar details were returned.')
+      }
 
       setValues((current) => side === 'frontSide'
         ? {
@@ -70,9 +71,12 @@ function Citizen() {
       setMessage('Aadhaar details filled successfully.')
     } catch (error) {
       console.error('Error processing Aadhaar image:', error)
-      setMessage('Unable to process Aadhaar image.')
+      const errorMessage = axios.isAxiosError(error)
+        ? error.response?.data?.msg
+        : ''
+      setMessage(errorMessage || 'Unable to process Aadhaar image.')
     } finally {
-      setIsExtracting(false)
+      setExtractingSide(null)
     }
   }
 
@@ -151,11 +155,11 @@ function Citizen() {
               </div>
               <p className="citizen-side-label">Upload the front side here</p>
               <label className="citizen-upload-button">
-                <span>{isExtracting ? 'Extracting...' : 'Upload'}</span>
+                <span>{extractingSide === 'frontSide' ? 'Extracting...' : 'Upload'}</span>
                 <input
                   type="file"
                   accept="image/*"
-                  disabled={isExtracting}
+                  disabled={extractingSide !== null}
                   onChange={(event) => updateCardImage(event, 'frontSide')}
                 />
               </label>
@@ -165,11 +169,11 @@ function Citizen() {
               </div>
               <p className="citizen-side-label">Upload the back side here</p>
               <label className="citizen-upload-button">
-                <span>{isExtracting ? 'Extracting...' : 'Upload'}</span>
+                <span>{extractingSide === 'backSide' ? 'Extracting...' : 'Upload'}</span>
                 <input
                   type="file"
                   accept="image/*"
-                  disabled={isExtracting}
+                  disabled={extractingSide !== null}
                   onChange={(event) => updateCardImage(event, 'backSide')}
                 />
               </label>
@@ -263,7 +267,7 @@ function Citizen() {
               Modify
             </button>
           </div>
-          {isExtracting && (
+          {extractingSide && (
             <div className="citizen-extraction-loader" role="status">
               <span className="citizen-loader-spinner" />
               <span>Extracting information from the Aadhaar image...</span>

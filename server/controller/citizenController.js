@@ -1,6 +1,6 @@
 const servicesColRef = require("../models/events-services")
 const vendorColRef = require("../models/vendorSchema")
-const {extractAadhaarDetails} = require("../config/ai-config");
+const {extractAadhaarDetailsWithOpenRouter} = require("../config/ai-config");
 const citizenColRef = require("../models/citizenSchema");
 const favrtColRef = require("../models/favrtSchema");
 
@@ -84,24 +84,39 @@ async function fetchVendors(req,res){
 }
 
 async function extractCitizenDetails(req,res){
-    console.log("reached controller")
     const image = req.files?.aadhaarImage
     const side = req.body.side
 
     if (!image) {
         return res.status(400).json({status:false,msg:"Aadhaar image is required"})
     }
+    if (!image.mimetype?.startsWith("image/")) {
+        return res.status(400).json({status:false,msg:"Only Aadhaar image files are supported"})
+    }
     if (side !== "front" && side !== "back") {
         return res.status(400).json({status:false,msg:"Aadhaar side must be front or back"})
     }
 
     try {
-        const details = await extractAadhaarDetails(image, side)
-        console.log(details)
+        const details = await extractAadhaarDetailsWithOpenRouter(image, side)
         res.json({status:true,details})
     } catch (err) {
-        console.error("Aadhaar extraction failed:", err)
-        res.status(500).json({status:false,msg:"Unable to process Aadhaar image"})
+        console.error("Aadhaar extraction failed:", err?.code || err?.status || "unknown provider error")
+        const status = err?.status || 500
+        const msg = err?.code === "OPENROUTER_KEY_MISSING"
+            ? "OpenRouter API key is not configured."
+            : err?.code === "OPENROUTER_IMAGE_UNSUPPORTED"
+                ? "The configured OpenRouter free model does not support image input."
+                : err?.code === "OPENROUTER_INVALID_JSON" || err?.code === "OPENROUTER_INVALID_DATA"
+                    ? "OpenRouter returned unreadable Aadhaar data. Please try a clearer image."
+                    : status === 429
+                        ? "OpenRouter is busy. Please try again shortly."
+                        : status === 503
+                            ? "OpenRouter is temporarily unavailable. Please try again."
+                            : status === 504
+                                ? "OpenRouter timed out. Please try again."
+                                : "Unable to process Aadhaar image"
+        res.status(status).json({status:false,msg})
     }
 }
 

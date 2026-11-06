@@ -30,6 +30,7 @@ function App() {
               <Route index element={<CitizenSearch />} />
               <Route path="search" element={<CitizenSearch />} />
               <Route path="favourites" element={<Favourites />} />
+              <Route path="profile" element={<Citizen></Citizen>}></Route>
             </Route>
      </Routes>
     {/* <Citizen></Citizen> */}

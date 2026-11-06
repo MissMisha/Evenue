@@ -35,6 +35,13 @@ function CitizenDashboard() {
             <span className="dashboard-nav-icon">♡</span>
             {sidebarOpen && <span>My favourites</span>}
           </NavLink>
+          <NavLink
+            className={({ isActive }) => `dashboard-nav-item${isActive ? ' is-active' : ''}`}
+            to="profile"
+          >
+            <span className="dashboard-nav-icon">✅</span>
+            {sidebarOpen && <span>Complete your profile</span>}
+          </NavLink>
         </nav>
       </aside>
 
