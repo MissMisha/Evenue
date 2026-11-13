@@ -46,7 +46,7 @@ function CitizenDashboard() {
             className={({ isActive }) => `dashboard-nav-item${isActive ? ' is-active' : ''}`}
             to="profile-details"
           >
-            <span className="dashboard-nav-icon">◉</span>
+            <span className="dashboard-nav-icon">👤</span>
             {sidebarOpen && <span>View saved profile</span>}
           </NavLink>
         </nav>
