@@ -1580,6 +1580,56 @@ button:hover { transform: translateY(-1px); }
   box-shadow: 0 10px 28px rgba(29, 52, 65, .06);
 }
 
+.dashboard-profile {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.profile-details-card {
+  margin-top: 24px;
+}
+
+.profile-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 24px;
+}
+
+.profile-details-grid span {
+  display: block;
+  margin-bottom: 5px;
+  color: #176b61;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.profile-details-grid strong {
+  display: block;
+  color: #263943;
+  font-size: .9rem;
+  overflow-wrap: anywhere;
+}
+
+.profile-details-wide {
+  grid-column: 1 / -1;
+}
+
+.profile-action-button {
+  margin-top: 24px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 5px;
+  color: #fff;
+  background: #176b61;
+  font-weight: 700;
+}
+
+.profile-action-button:hover {
+  background: #0f574e;
+}
+
 .favourites-list {
   display: grid;
   gap: 20px;
@@ -1732,6 +1782,8 @@ button:hover { transform: translateY(-1px); }
   .dashboard-main { padding: 32px 12px; }
   .dashboard-favourites { margin: 0 8px; }
   .dashboard-content-card { padding: 24px 20px; }
+  .profile-details-grid { grid-template-columns: 1fr; }
+  .profile-details-wide { grid-column: auto; }
   .vendor-card { grid-template-columns: 1fr; margin: 20px 12px; }
   .vendor-card-image,
   .vendor-card-image img { min-height: 170px; }

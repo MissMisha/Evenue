@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 type UserDetails = {
   email: string
@@ -13,6 +14,7 @@ type UserDetails = {
 }
 
 function Profile() {
+  const navigate = useNavigate()
   const [details, setDetails] = useState<UserDetails | null>(null)
   const [message, setMessage] = useState('Loading profile...')
 
@@ -61,7 +63,8 @@ function Profile() {
 
       <div className="dashboard-content-card profile-details-card">
         {details ? (
-          <div className="profile-details-grid">
+          <>
+            <div className="profile-details-grid">
             <div><span>Email</span><strong>{details.email}</strong></div>
             <div><span>Name</span><strong>{details.name}</strong></div>
             <div><span>Aadhaar card number</span><strong>{details.aCardNo}</strong></div>
@@ -73,9 +76,28 @@ function Profile() {
               <span>Address</span>
               <strong>{details.address}</strong>
             </div>
-          </div>
+            </div>
+            <button
+              className="profile-action-button"
+              type="button"
+              onClick={() => navigate('../profile', { state: { details } })}
+            >
+              Update your details
+            </button>
+          </>
         ) : (
-          <p>{message}</p>
+          <>
+            <p>{message}</p>
+            {message !== 'Loading profile...' && (
+              <button
+                className="profile-action-button"
+                type="button"
+                onClick={() => navigate('../profile')}
+              >
+                Complete your profile
+              </button>
+            )}
+          </>
         )}
       </div>
     </div>

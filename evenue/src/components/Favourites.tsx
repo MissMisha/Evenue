@@ -26,7 +26,6 @@ import { useNavigate } from "react-router-dom";
 function Favourites() {
     const [favourites,setFavourites] = useState(false);
     const [fvrtVendors,setfavrtVendors] = useState<vendor[]>([]);
-    const [email,setEmail] = useState("");
     const [toastMessage, setToastMessage] = useState("");
     const navigate = useNavigate();
 
@@ -43,7 +42,24 @@ function Favourites() {
       return () => window.clearTimeout(timeoutId)
     }, [navigate, toastMessage])
 
-    function getCards(ary:[string]){
+    useEffect(() => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user") || "null")
+        const email = user?.email
+
+        if (!email) {
+          setToastMessage("Please log in to view your favourites.")
+          return
+        }
+
+        fetchFavourites(email)
+      } catch (error) {
+        console.error("Unable to read logged-in user:", error)
+        setToastMessage("Please log in to view your favourites.")
+      }
+    }, [])
+
+    function getCards(ary:string[]){
          axios.post("http://localhost:2001/vendor/getfavrtCards",{
             ary:ary
          })
@@ -54,7 +70,7 @@ function Favourites() {
     }
 
     // fetch the document of specific user from favourites collection 
-    function fetchFavourites(){
+    function fetchFavourites(email:string){
       const token = localStorage.getItem("token")
         axios.get("http://localhost:2001/vendor/getfavrts",{
            params: {email},
@@ -95,23 +111,6 @@ function Favourites() {
         <h1>My favourites</h1>
         <span>Your saved service providers will appear here.</span>
       </div>
-
-      <label className="favourites-email-field" htmlFor="favourites-email">
-        Email ID
-        <div className="favourites-email-controls">
-          <input
-            id="favourites-email"
-            type="email"
-            placeholder="you@example.com"
-            autoComplete="email"
-            onChange={((e)=>setEmail(e.target.value))}
-          />
-          <button className="favourites-search-button" type="button"
-          onClick={fetchFavourites}>
-            Find favourites
-          </button>
-        </div>
-      </label>
 
       <div className="favourites-list">
         <div className="dashboard-content-card">

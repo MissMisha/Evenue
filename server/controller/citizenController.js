@@ -133,7 +133,11 @@ function saveCitizenData(req,res){
 
 async function saveUserDetails(req,res){
     try {
-        const doc = await userDetailsColRef.create(req.body);
+        const doc = await userDetailsColRef.findOneAndUpdate(
+            {email: req.body.email},
+            req.body,
+            {new:true, upsert:true, runValidators:true}
+        );
         return res.json({status:true,msg:"User details saved successfully",doc});
     } catch (err) {
         console.error("Unable to save user details:", err);

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import axios from 'axios'
+import { useLocation } from 'react-router-dom'
 
 type CitizenValues = {
   email: string
@@ -16,18 +17,20 @@ type CitizenValues = {
 }
 
 function Citizen() {
-  const [values, setValues] = useState<CitizenValues>({
-    email: '',
-    aCardNo: '',
-    name: '',
-    dob: '',
-    gender: '',
-    address: '',
-    city: '',
-    contact: '',
+  const location = useLocation()
+  const savedDetails = (location.state as { details?: Partial<CitizenValues> } | null)?.details
+  const [values, setValues] = useState<CitizenValues>(() => ({
+    email: savedDetails?.email || '',
+    aCardNo: savedDetails?.aCardNo || '',
+    name: savedDetails?.name || '',
+    dob: savedDetails?.dob || '',
+    gender: savedDetails?.gender || '',
+    address: savedDetails?.address || '',
+    city: savedDetails?.city || '',
+    contact: savedDetails?.contact || '',
     frontSide: null,
     backSide: null,
-  })
+  }))
   const [frontPreview, setFrontPreview] = useState('')
   const [backPreview, setBackPreview] = useState('')
   const [message, setMessage] = useState('')
