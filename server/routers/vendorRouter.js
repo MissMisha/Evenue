@@ -11,4 +11,5 @@ router.get("/getfavrts",verifyToken,getFavourites)
 router.post("/getfavrtCards",getfavrtCards)
 router.post("/saveRating",saveRating)
 
+
 module.exports = router

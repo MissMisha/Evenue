@@ -3,6 +3,7 @@ const vendorColRef = require("../models/vendorSchema")
 const {extractAadhaarDetailsWithOpenRouter} = require("../config/ai-config");
 const citizenColRef = require("../models/citizenSchema");
 const favrtColRef = require("../models/favrtSchema");
+const userDetailsColRef = require("../models/userDetailsSchema");
 
 
 async function saveEvents(req,res){
@@ -130,5 +131,35 @@ function saveCitizenData(req,res){
     })
 }
 
+async function saveUserDetails(req,res){
+    try {
+        const doc = await userDetailsColRef.create(req.body);
+        return res.json({status:true,msg:"User details saved successfully",doc});
+    } catch (err) {
+        console.error("Unable to save user details:", err);
+        return res.status(400).json({status:false,msg:"Unable to save user details"});
+    }
+}
 
-module.exports = {saveEvents,fetchServices,fetchVendors,extractCitizenDetails,saveCitizenData}
+async function getUserDetails(req,res){
+    const {email} = req.query;
+
+    if (!email) {
+        return res.status(400).json({status:false,msg:"Email is required"});
+    }
+
+    try {
+        const doc = await userDetailsColRef.findOne({email});
+
+        if (!doc) {
+            return res.status(404).json({status:false,msg:"Profile details not found"});
+        }
+
+        return res.json({status:true,doc});
+    } catch (err) {
+        console.error("Unable to fetch user details:", err);
+        return res.status(500).json({status:false,msg:"Unable to fetch user details"});
+    }
+}
+
+module.exports = {saveEvents,fetchServices,fetchVendors,extractCitizenDetails,saveCitizenData,saveUserDetails,getUserDetails}

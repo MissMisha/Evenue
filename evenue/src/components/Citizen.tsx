@@ -118,9 +118,35 @@ function Citizen() {
       : 'other'
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    setMessage('Citizen details uploaded successfully.')
+    try {
+      const response = await axios.post(
+        'http://localhost:2001/citizen/saveUserDetails',
+        {
+          email: values.email,
+          aCardNo: values.aCardNo,
+          name: values.name,
+          dob: values.dob,
+          gender: values.gender,
+          address: values.address,
+          city: values.city,
+          contact: values.contact,
+        },
+      )
+
+      if (response.data?.status === false) {
+        throw new Error(response.data.msg || 'Unable to save user details.')
+      }
+
+      setMessage('Citizen details saved successfully.')
+    } catch (error) {
+      console.error('Unable to save citizen details:', error)
+      const errorMessage = axios.isAxiosError(error)
+        ? error.response?.data?.msg
+        : ''
+      setMessage(errorMessage || 'Unable to save citizen details.')
+    }
   }
 
   return (

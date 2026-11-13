@@ -130,4 +130,7 @@ async function saveRating(req,resp) {
     })
 }
 
+
+
+
 module.exports = {doRegister,doFetch,saveFavourites,getFavourites,getfavrtCards,saveRating} 

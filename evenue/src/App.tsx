@@ -9,6 +9,7 @@ import CitizenDashboard from './components/CitizenDashboard'
 import Favourites from './components/Favourites'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import Home from './components/Home'
+import Profile from './components/Profile'
 
 function App() {
   const { pathname } = useLocation()
@@ -30,7 +31,7 @@ function App() {
               <Route index element={<CitizenSearch />} />
               <Route path="search" element={<CitizenSearch />} />
               <Route path="favourites" element={<Favourites />} />
-              <Route path="profile" element={<Citizen></Citizen>}></Route>
+              <Route path="profile" element={<Profile />}></Route>
             </Route>
      </Routes>
     {/* <Citizen></Citizen> */}

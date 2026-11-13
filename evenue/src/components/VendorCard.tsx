@@ -51,6 +51,8 @@ type Vendor = {
   instagramId: string
   shopPicture: string
   businessCertificate: string
+  ratingSum?: number
+  users_rated?: number
 }
 
 
@@ -59,7 +61,12 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
   const [showFavouritePopup, setShowFavouritePopup] = useState(false)
   const [msg,setMsg] = useState("");
   const [toastMessage,setToastMessage]=useState("")
-  const [rating,setRating] = useState<number>(0);
+  const [rating, setRating] = useState(0)
+  const [averageRating, setAverageRating] = useState(
+    vendor.users_rated ? (vendor.ratingSum ?? 0) / vendor.users_rated : 0,
+  )
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false)
+  const [isSavingRating, setIsSavingRating] = useState(false)
    
   const categories = Array.isArray(vendor.categories)
     ? vendor.categories
@@ -74,7 +81,9 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
 
     const timeoutId = window.setTimeout(() => {
       setToastMessage('')
-      navigate('/login')
+      if (toastMessage === 'Your session has expired. Please log in again.') {
+        navigate('/login')
+      }
     }, 2500)
 
     return () => window.clearTimeout(timeoutId)
@@ -82,20 +91,43 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
 
 
   useEffect(() => {
-    async function saveRating() {
-      try {
-        const resp = await axios.post("http://localhost:2001/vendor/saveRating", {
-          rating,
-          email: vendor.email,
-        })
-        console.log(resp.data)
-      } catch (err) {
-        console.error("Unable to save rating:", err)
-      }
+    setAverageRating(
+      vendor.users_rated ? (vendor.ratingSum ?? 0) / vendor.users_rated : 0,
+    )
+  }, [vendor.ratingSum, vendor.users_rated])
+
+  async function saveRating() {
+    if (rating === 0) {
+      setToastMessage("Please select a rating first.")
+      return
     }
 
-    saveRating()
-  }, [rating, vendor.email])
+    setIsSavingRating(true)
+    try {
+      const resp = await axios.post("http://localhost:2001/vendor/saveRating", {
+        rating,
+        email: vendor.email,
+      })
+      console.log(resp);
+
+      if (resp.data?.status === false) {
+        throw new Error(resp.data.msg || "The rating could not be saved.")
+      }
+
+      const currentTotal = vendor.ratingSum ?? 0
+      const currentCount = vendor.users_rated ?? 0
+      setAverageRating((currentTotal + rating) / (currentCount + 1))
+      setRating(0)
+      setIsRatingModalOpen(false)
+      setMsg("Your rating was saved.")
+      setShowFavouritePopup(true)
+    } catch (err) {
+      console.error("Unable to save rating:", err)
+      setToastMessage("Unable to save your rating. Please try again.")
+    } finally {
+      setIsSavingRating(false)
+    }
+  }
   async function addToFavourites(){
     // console.log("add");
       try {
@@ -230,25 +262,77 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
           </div>
         )}
 
-        <div className="vendor-card-rating" aria-label="5 out of 5 stars">
+        <button
+          className="vendor-card-rating"
+          type="button"
+          onClick={() => setIsRatingModalOpen(true)}
+          aria-label={`Rate this vendor. Current rating: ${averageRating.toFixed(1)} out of 5`}
+        >
             <ReactStars
               count={5}
-              value = {rating}
-              onChange={(newRating:number)=>{console.log(newRating);setRating(newRating)}}
+              value={averageRating}
               size={24}
               char="★"
               color="#b8b8b8"
               activeColor="#ffd700"
-              edit={true}
-              isHalf={false}
+              edit={false}
+              isHalf={true}
             />
-        </div>
+        
+        </button>
       </div>
+      {isRatingModalOpen && (
+        <div
+          className="rating-modal-backdrop"
+          role="presentation"
+          onClick={() => setIsRatingModalOpen(false)}
+        >
+          <section
+            className="rating-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="rating-modal-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              className="rating-modal-close"
+              type="button"
+              aria-label="Close rating dialog"
+              onClick={() => setIsRatingModalOpen(false)}
+            >
+              ×
+            </button>
+            <h2 id="rating-modal-title">Rate {vendor.businessName}</h2>
+            <p>How would you rate this vendor?</p>
+            <div className="rating-modal-stars">
+              <ReactStars
+                count={5}
+                value={rating}
+                onChange={setRating}
+                size={32}
+                char="★"
+                color="#b8b8b8"
+                activeColor="#ffd700"
+                edit={true}
+                isHalf={false}
+              />
+            </div>
+            <button
+              className="rating-modal-submit"
+              type="button"
+              disabled={isSavingRating || rating === 0}
+              onClick={saveRating}
+            >
+              {isSavingRating ? "Saving..." : "Submit rating"}
+            </button>
+          </section>
+        </div>
+      )}
       {showFavouritePopup && (
         <div className="favourite-popup" role="status" aria-live="polite">
           <div className="favourite-popup-icon">♡</div>
           <div className="favourite-popup-content">
-            <strong>Favourite updated</strong>
+            <strong>Action Successfull</strong>
             <p>{msg}</p>
           </div>
           <button
