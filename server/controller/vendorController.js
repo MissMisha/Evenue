@@ -31,6 +31,8 @@ async function doRegister(req,res){
 
         req.body.shopPicture = shopPic
         req.body.businessCertificate = businessCert
+        req.body.ratingSum = 0;
+        req.body.users_rated= 0;
         
         let doc = new vendorColRef(req.body);
         doc.save().then((doc)=>{
@@ -108,4 +110,24 @@ async function getfavrtCards(req,resp){
     })
 }
 
-module.exports = {doRegister,doFetch,saveFavourites,getFavourites,getfavrtCards} 
+async function saveRating(req,resp) {
+    const rating = req.body.rating;
+    const email = req.body.email;
+
+    const result = await vendorColRef.updateOne(
+        {email:email},
+        {
+            $inc:{
+                ratingSum:rating,
+                users_rated:1
+            }
+        }
+    ).then((doc)=>{
+        console.log(doc)
+        resp.json({status:true,msg:"Successfully saved"})
+    }).catch((err)=>{
+        resp.json({status:false,msg:"Some error occured",err})
+    })
+}
+
+module.exports = {doRegister,doFetch,saveFavourites,getFavourites,getfavrtCards,saveRating} 

@@ -1,6 +1,41 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import type { ComponentType } from "react"
 import { useNavigate } from "react-router-dom"
+import ReactStarsModule from "react-rating-stars-component"
+
+type ReactStarsProps = {
+  count: number
+  value: number
+  onChange: (rating: number) => void
+  size: number
+  char: string
+  color: string
+  activeColor: string
+  edit: boolean
+  isHalf?: boolean
+}
+
+const ReactStars = (() => {
+  let component: unknown = ReactStarsModule
+
+  while (
+    component &&
+    typeof component !== "function" &&
+    typeof component === "object" &&
+    "default" in component
+  ) {
+    component = component.default
+  }
+
+  if (typeof component !== "function") {
+    throw new Error("Unable to load react-rating-stars-component")
+  }
+
+  return component as ComponentType<ReactStarsProps>
+})()
+
+
 type Vendor = {
   email: string
   name: string
@@ -24,6 +59,8 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
   const [showFavouritePopup, setShowFavouritePopup] = useState(false)
   const [msg,setMsg] = useState("");
   const [toastMessage,setToastMessage]=useState("")
+  const [rating,setRating] = useState<number>(0);
+   
   const categories = Array.isArray(vendor.categories)
     ? vendor.categories
     : vendor.categories
@@ -43,6 +80,22 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
     return () => window.clearTimeout(timeoutId)
   }, [navigate, toastMessage])
 
+
+  useEffect(() => {
+    async function saveRating() {
+      try {
+        const resp = await axios.post("http://localhost:2001/vendor/saveRating", {
+          rating,
+          email: vendor.email,
+        })
+        console.log(resp.data)
+      } catch (err) {
+        console.error("Unable to save rating:", err)
+      }
+    }
+
+    saveRating()
+  }, [rating, vendor.email])
   async function addToFavourites(){
     // console.log("add");
       try {
@@ -178,11 +231,17 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
         )}
 
         <div className="vendor-card-rating" aria-label="5 out of 5 stars">
-          <span aria-hidden="true">★</span>
-          <span aria-hidden="true">★</span>
-          <span aria-hidden="true">★</span>
-          <span aria-hidden="true">★</span>
-          <span aria-hidden="true">★</span>
+            <ReactStars
+              count={5}
+              value = {rating}
+              onChange={(newRating:number)=>{console.log(newRating);setRating(newRating)}}
+              size={24}
+              char="★"
+              color="#b8b8b8"
+              activeColor="#ffd700"
+              edit={true}
+              isHalf={false}
+            />
         </div>
       </div>
       {showFavouritePopup && (

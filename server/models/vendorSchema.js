@@ -18,7 +18,9 @@ var vendorSchema = {
     websiteUrl: String,
     instagramId: String,
     shopPicture: String,
-    businessCertificate: String 
+    businessCertificate: String,
+    ratingSum:Number,
+    users_rated:Number
 }
 
 let mongooseSchema = mongoose.Schema;

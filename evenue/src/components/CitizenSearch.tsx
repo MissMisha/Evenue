@@ -57,7 +57,7 @@ function CitizenSearch() {
     axios.post("http://localhost:2001/citizen/saveEvents").then((res)=>{   // if not present then save otherwise return them
             // console.log(res.data.doc)
             const ary:Event[] = res.data.doc
-            setEvents(ary.map((item)=>item.event))
+            setEvents(ary.map((item) => item.event))
     }).catch((err)=>{
         console.log(err)
     }) 
@@ -97,6 +97,12 @@ function CitizenSearch() {
         setToastMessage('Your session has expired. Please log in again.')
         // navigate("/login")
        }
+        if (!Array.isArray(res.data.doc)) {
+          console.error("Vendor response did not contain a vendor list:", res.data)
+          setVendors([])
+          return
+        }
+
         console.log(res.data)
         setVendors(res.data.doc)
         setTotalPages(res.data.totalPages)
@@ -137,8 +143,8 @@ function CitizenSearch() {
               
             >
               <option value="">Choose an event</option>
-              {events.map((event) => (
-                <option key={event} value={event}>
+              {events.map((event, index) => (
+                <option key={`${event}-${index}`} value={event}>
                   {event}
                 </option>
               ))}
@@ -161,7 +167,7 @@ function CitizenSearch() {
                       checked={selectedService === service}
                       onChange={
                         (event) => {setSelectedService(event.target.value);
-                        showVendors(event.target.value);
+                        showVendors(event.target.value, currentPage);
                         setShowPage(true)
                         }}
                     />
