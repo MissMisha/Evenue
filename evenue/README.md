@@ -59,7 +59,7 @@ The project is split into:
 - express-fileupload
 - Cloudinary
 - CORS
-- OpenRouter/Gemini configuration for Aadhaar extraction
+- OpenRouter configuration for Aadhaar extraction
 
 ## Project structure
 
