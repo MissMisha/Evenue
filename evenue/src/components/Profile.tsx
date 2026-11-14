@@ -59,8 +59,7 @@ function Profile() {
         <p>Citizen dashboard</p>
         <h1>My profile</h1>
         <span>Your saved citizen details are shown here.</span>
-      </div>
-
+      </div>  
       <div className="dashboard-content-card profile-details-card">
         {details ? (
           <>

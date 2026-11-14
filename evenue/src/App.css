@@ -925,6 +925,27 @@ button:hover { transform: translateY(-1px); }
   box-shadow: 0 24px 60px rgba(34, 75, 67, .1);
 }
 
+.citizen-search-accent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 10px 14px;
+  color: #687983;
+  font-size: .75rem;
+}
+
+.citizen-search-accent span:first-child {
+  color: #d78c78;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.citizen-search-accent span:last-child {
+  padding-left: 12px;
+  border-left: 1px solid #d5e5df;
+}
+
 .citizen-search-sidebar {
   padding: 36px 30px;
   border-right: 1px solid #eadbce;
@@ -1548,6 +1569,29 @@ button:hover { transform: translateY(-1px); }
   margin: 28px 32px 0;
 }
 
+.favourites-accent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 720px;
+  margin: 22px 0 0;
+  color: #687983;
+  font-size: .78rem;
+  font-style: italic;
+}
+
+.favourites-accent-icon {
+  color: #d78c78;
+  font-size: 1.5rem;
+  font-style: normal;
+}
+
+.favourites-accent-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, #eadbce, transparent);
+}
+
 .dashboard-page-heading p {
   margin: 0 0 8px;
   color: #176b61;
@@ -1587,6 +1631,29 @@ button:hover { transform: translateY(-1px); }
 
 .profile-details-card {
   margin-top: 24px;
+}
+
+.profile-accent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 720px;
+  margin-top: 22px;
+  color: #687983;
+  font-size: .78rem;
+  font-style: italic;
+}
+
+.profile-accent-mark {
+  color: #d78c78;
+  font-size: 1.15rem;
+  font-style: normal;
+}
+
+.profile-accent-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, #d5e5df, transparent);
 }
 
 .profile-details-grid {

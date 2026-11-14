@@ -123,6 +123,10 @@ function CitizenSearch() {
           
         </div>
       )}
+      <div className="citizen-search-accent" aria-hidden="true">
+        <span>✦ Curated for your occasion</span>
+        <span>Choose a moment. We’ll help with the details.</span>
+      </div>
       <section className="citizen-search-layout">
         <aside className="citizen-search-sidebar">
           <div className="citizen-search-heading">

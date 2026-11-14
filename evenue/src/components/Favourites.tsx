@@ -111,6 +111,11 @@ function Favourites() {
         <h1>My favourites</h1>
         <span>Your saved service providers will appear here.</span>
       </div>
+      <div className="favourites-accent" aria-hidden="true">
+        <span className="favourites-accent-icon">♡</span>
+        <span>Little details worth keeping close</span>
+        <span className="favourites-accent-line" />
+      </div>
 
       <div className="favourites-list">
         <div className="dashboard-content-card">
